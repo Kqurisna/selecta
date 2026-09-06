@@ -657,7 +657,7 @@ button:disabled {
 .preview-photo-inner {
   /* Animasi resize smooth saat kartu belakang (mis. rasio 1:1,
      40x40) naik jadi current (mis. rasio 3:2, kotak preview penuh). */
-  transition: aspect-ratio 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: aspect-ratio 0.28s cubic-bezier(0.33, 1, 0.68, 1);
   position: relative;
   flex: 0 1 auto;
   align-self: center;
