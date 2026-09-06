@@ -419,9 +419,10 @@ function App() {
     // sama-sama landscape ~1.5), animasi resize tidak perlu jalan --
     // selisihnya nyaris tak kelihatan dan cuma bikin terasa delay.
     // Threshold 8% dianggap "cukup mirip, skip animasi".
-    const RESIZE_ANIM_THRESHOLD = 0.08;
     const upcoming = visibleQueue[0];
-    const priorRatio = upcoming ? stackAspectRatios[upcoming.path] ?? null : null;
+    const priorRatio = upcoming
+      ? (stackAspectRatios[upcoming.path] ?? null)
+      : null;
     setCurrentAspectRatio(priorRatio);
 
     if (priorRatio != null) {
@@ -1426,14 +1427,10 @@ function App() {
                                 const newRatio =
                                   img.naturalWidth / img.naturalHeight;
                                 setCurrentAspectRatio((prev) => {
-                                  // Rasio mirip (selisih < 8%) -> skip animasi,
-                                  // langsung set tanpa transisi supaya tidak
-                                  // ada delay yang tidak perlu untuk foto yang
-                                  // bentuknya sudah sama dengan frame.
                                   const RESIZE_ANIM_THRESHOLD = 0.08;
                                   const similar =
                                     prev != null &&
-                                    Math.abs(newRatio - prev) / prev 
+                                    Math.abs(newRatio - prev) / prev <
                                       RESIZE_ANIM_THRESHOLD;
                                   setSkipResizeAnim(similar);
                                   return newRatio;
