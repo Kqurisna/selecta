@@ -1316,6 +1316,15 @@ button:disabled {
   inset: 2%;
 }
 
+/* Kartu latar (stack-sheet) di belakang current photo dibuat lebih kecil
+   khusus di mode immersive/fullscreen — supaya tidak terlihat terlalu
+   besar/menonjol dibanding current photo. Hanya inset yang diubah (bukan
+   scale/transform di App.tsx), jadi tidak menyentuh .preview-card atau
+   mode normal sama sekali. */
+.sorting-screen.immersive .stack-sheet {
+  inset: 9%;
+}
+
 .sorting-screen.immersive .sorting-layout {
   gap: 0;
 }
