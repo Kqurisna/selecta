@@ -601,6 +601,10 @@ button:disabled {
   background: var(--border-strong);
   border: 1px solid var(--border-strong);
   border-radius: 9px;
+  /* Padding SAMA PERSIS dengan .preview-photo-inner (kartu current) —
+     supaya begitu kartu tumpukan ini naik jadi current, tidak ada
+     lompatan visual mendadak (foto tiba-tiba dapat jarak/napas baru). */
+  padding: 8px;
   box-shadow: 0 var(--depth-shadow-y, 4px) var(--depth-shadow-blur, 14px)
     rgba(20, 20, 15, 0.09);
   overflow: hidden;
