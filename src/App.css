@@ -1383,7 +1383,20 @@ button:disabled {
   background: var(--surface);
   opacity: 0;
   z-index: 60;
-  transition: opacity 0.2s ease;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+/* Geser tombol "Esc — keluar layar penuh" ke kiri khusus saat fullscreen,
+   supaya sejajar di sebelah tombol filter "Video" alih-alih nempel di
+   pojok kanan. Nilai translateX ini perkiraan awal — sesuaikan angkanya
+   kalau posisinya masih kurang/kelebihan geser. */
+.sorting-screen.immersive .immersive-exit {
+  transform: translateX(-260px);
+}
+.sorting-screen.immersive:hover .immersive-exit {
+  transform: translateX(-260px);
 }
 
 .sorting-screen.immersive:hover .immersive-exit,
