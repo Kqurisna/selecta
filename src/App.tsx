@@ -410,31 +410,14 @@ function App() {
       setPreviewSrc("");
       return;
     }
-    // Kalau foto ini sebelumnya sudah jadi stack-sheet di belakang, rasio
-    // dimensinya sudah kita tahu (dari onLoad thumbnail) -- pakai itu dulu
-    // supaya kotak current mulai dari bentuk kartu-belakang, lalu transisi
-    // smooth ke rasio aslinya (CSS transition di .preview-photo-inner).
-    //
-    // TAPI: kalau rasio kartu-belakang dan rasio final sudah mirip (mis.
-    // sama-sama landscape ~1.5), animasi resize tidak perlu jalan --
-    // selisihnya nyaris tak kelihatan dan cuma bikin terasa delay.
-    // Threshold 8% dianggap "cukup mirip, skip animasi".
-    const upcoming = visibleQueue[0];
-    const priorRatio = upcoming
-      ? (stackAspectRatios[upcoming.path] ?? null)
-      : null;
-    setCurrentAspectRatio(priorRatio);
-
-    if (priorRatio != null) {
-      const finalRatio = upcoming ? stackAspectRatios[upcoming.path] : null;
-      // finalRatio di titik ini masih sama dengan priorRatio (belum ada data
-      // baru) -- keputusan skip/animasi yang sebenarnya dilakukan di
-      // onLoad <img> current (lihat handler di bawah), karena di situlah
-      // rasio ASLI foto baru diketahui pasti. Di sini kita cuma siapkan
-      // starting point transisi.
-      void finalRatio;
-    }
-    setSkipResizeAnim(false); // default: animasi aktif, dikoreksi di onLoad
+    // SENGAJA tidak reset/mengubah currentAspectRatio di sini. Nilainya
+    // dibiarkan "menggantung" dari foto SEBELUMNYA (ukuran container lama),
+    // supaya saat <img> current yang baru selesai load dan memanggil
+    // setCurrentAspectRatio(rasioFinal), CSS transition di
+    // .preview-photo-frame meng-interpolasi dari ukuran lama -> ukuran
+    // final secara animatif (container "menyesuaikan", bukan snap
+    // instan). Ini yang menghasilkan efek: card tetap di ukuran lama
+    // sesaat, lalu smooth membesar/mengecil mengikuti rasio foto baru.
     const current = visibleQueue[0];
 
     if (current.kind === "pdf" || current.kind === "video") {
