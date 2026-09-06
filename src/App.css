@@ -1303,12 +1303,13 @@ button:disabled {
 }
 
 .sorting-screen.immersive .preview-box {
-  height: 100vh;
-  margin-top: 0; /* reset — margin-top 56px (ruang untuk kartu tumpukan
-     "nongol" di mode normal) sebelumnya tidak direset di sini, sehingga
-     total tinggi jadi 100vh + 56px dan memicu scroll tak diinginkan di
-     fullscreen. Kartu preview jadi sedikit lebih kecil untuk menyesuaikan,
-     yang tidak masalah demi mengunci layout pas tanpa scroll. */
+  height: calc(100vh - 64px); /* dikurangi supaya ada ruang di atas untuk
+     top-bar (Semua/Foto/PDF/Video, Batal, Penuh, Esc) tetap terlihat
+     jelas tanpa menutupi foto. Sebelumnya 100vh penuh + margin-top 0,
+     sekarang tinggi dikurangi dan didorong turun lewat margin-top di
+     bawah. .selected-tray TIDAK disentuh — posisinya fixed top:50% jadi
+     otomatis tetap di posisi yang sama relatif terhadap layar. */
+  margin-top: 64px;
   border: none;
 }
 
