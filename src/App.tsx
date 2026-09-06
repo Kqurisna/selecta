@@ -184,6 +184,10 @@ function App() {
   // klik foto di tray Selected. Dinonaktifkan lewat ArrowUp.
   const [compareMode, setCompareMode] = useState(false);
   const [referencePhoto, setReferencePhoto] = useState<PhotoEntry | null>(null);
+  // Kotak foto patokan TIDAK langsung tampil begitu compare mode aktif —
+  // yang muncul duluan cuma tombol bulat kecil di kiri. Klik tombol itu
+  // untuk membuka/menutup kotak patokan.
+  const [referenceBoxOpen, setReferenceBoxOpen] = useState(false);
   // Lebar kotak patokan (kiri) dalam persen dari total lebar compare-stage.
   // Diubah lewat drag pada resize handle di antara kotak kiri-kanan.
   const [referenceWidthPct, setReferenceWidthPct] = useState(50);
@@ -841,6 +845,7 @@ function App() {
         if (compareMode) {
           setCompareMode(false);
           setReferencePhoto(null);
+          setReferenceBoxOpen(false);
         }
       } else if ((e.key === "z" || e.key === "Z") && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -1150,6 +1155,26 @@ function App() {
             onPointerLeave={compareMode ? onResizePointerUp : undefined}
           >
             {compareMode && referencePhoto && (
+              <button
+                type="button"
+                className="reference-peek-toggle"
+                onClick={() => setReferenceBoxOpen((v) => !v)}
+                title={
+                  referenceBoxOpen
+                    ? "Sembunyikan foto patokan"
+                    : "Tampilkan foto patokan"
+                }
+                aria-expanded={referenceBoxOpen}
+                aria-label={
+                  referenceBoxOpen
+                    ? "Sembunyikan foto patokan"
+                    : "Tampilkan foto patokan"
+                }
+              >
+                <span aria-hidden="true">{referenceBoxOpen ? "‹" : "›"}</span>
+              </button>
+            )}
+            {compareMode && referencePhoto && referenceBoxOpen && (
               <>
                 <div
                   className="compare-reference"
