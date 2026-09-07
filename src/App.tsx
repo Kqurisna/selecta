@@ -1180,52 +1180,47 @@ function App() {
                   className="compare-reference"
                   style={{ flex: `0 0 ${referenceWidthPct}%` }}
                 >
-                  <div className="compare-reference-label mono">
-                    Patokan ·{" "}
-                    <span className="compare-hint-inline">↑ keluar</span>
-                  </div>
-                  <div
-                    className="compare-reference-box"
-                    style={
-                      referenceAspectRatio
-                        ? { aspectRatio: `${referenceAspectRatio}` }
-                        : undefined
-                    }
-                  >
-                    {referencePhoto.kind === "pdf" ? (
-                      <PdfViewer
-                        path={referencePhoto.path}
-                        compact
-                        onDimensionsChange={setReferenceAspectRatio}
-                      />
-                    ) : referencePhoto.kind === "video" ? (
-                      <VideoViewer
-                        path={referencePhoto.path}
-                        compact
-                        onDimensionsChange={setReferenceAspectRatio}
-                      />
-                    ) : (
-                      <img
-                        src={
-                          previewCache.current.get(referencePhoto.path) ?? ""
-                        }
-                        alt={referencePhoto.name}
-                        className="preview-img"
-                        draggable={false}
-                        onLoad={(e) => {
-                          const img = e.currentTarget;
-                          if (img.naturalWidth && img.naturalHeight) {
-                            setReferenceAspectRatio(
-                              img.naturalWidth / img.naturalHeight,
-                            );
+                  <div className="compare-reference-box">
+                    <div
+                      className="compare-reference-photo"
+                      style={
+                        referenceAspectRatio
+                          ? { aspectRatio: `${referenceAspectRatio}` }
+                          : undefined
+                      }
+                    >
+                      {referencePhoto.kind === "pdf" ? (
+                        <PdfViewer
+                          path={referencePhoto.path}
+                          compact
+                          onDimensionsChange={setReferenceAspectRatio}
+                        />
+                      ) : referencePhoto.kind === "video" ? (
+                        <VideoViewer
+                          path={referencePhoto.path}
+                          compact
+                          onDimensionsChange={setReferenceAspectRatio}
+                        />
+                      ) : (
+                        <img
+                          src={
+                            previewCache.current.get(referencePhoto.path) ?? ""
                           }
-                        }}
-                      />
-                    )}
+                          alt={referencePhoto.name}
+                          className="preview-img"
+                          draggable={false}
+                          onLoad={(e) => {
+                            const img = e.currentTarget;
+                            if (img.naturalWidth && img.naturalHeight) {
+                              setReferenceAspectRatio(
+                                img.naturalWidth / img.naturalHeight,
+                              );
+                            }
+                          }}
+                        />
+                      )}
+                    </div>
                   </div>
-                  <p className="compare-reference-name mono">
-                    {referencePhoto.name}
-                  </p>
                 </div>
                 <div
                   className="compare-resize-handle"
