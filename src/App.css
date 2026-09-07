@@ -1818,43 +1818,20 @@ button:disabled {
 
 /* ---------- Mode Banding (Compare Mode) ---------- */
 
-/* Resize handle: divider antara kotak patokan dan filmstrip kandidat.
-   Lebar kotak kiri (compare-reference) diatur manual lewat inline style
-   flex-basis yang di-set dari state referenceWidthPct di App.tsx. */
-.compare-reference {
-  padding-right: 16px;
-}
-.compare-resize-handle {
-  flex-shrink: 0;
-  width: 16px;
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: col-resize;
-  touch-action: none;
-}
-.compare-resize-grip {
-  width: 3px;
-  height: 48px;
-  border-radius: 2px;
-  background: var(--border-strong);
-}
-.compare-resize-handle:hover .compare-resize-grip,
-.compare-resize-handle:active .compare-resize-grip {
-  background: var(--accent);
-}
-
+/* ---------- Mode Banding: overlay mengambang ----------
+   Kotak patokan (.compare-reference) sekarang MENUMPUK di atas foto
+   current, bukan lagi kolom sejajar di kiri. Ukurannya mengikuti pola
+   YANG SAMA seperti .preview-photo-inner (current photo): width/height
+   auto, dibatasi max-width/max-height dari kanvas tetap, bentuk asli
+   murni dari aspect-ratio (inline style referenceAspectRatio). Resize
+   manual (drag) sudah dihapus — kotak ini fixed size, hanya bisa
+   dibuka/ditutup lewat tombol bulat (.reference-peek-toggle). */
 .compare-stage.compare-mode {
-  display: flex;
-  gap: 20px;
-  align-items: flex-start;
+  position: relative;
 }
 
 .compare-stage.compare-mode .filmstrip {
-  flex: 1;
-  min-width: 0;
-  margin-left: 56px;
+  width: 100%;
 }
 
 .reference-peek-toggle {
@@ -1887,67 +1864,78 @@ button:disabled {
   transform: translateY(-50%) scale(1.05);
 }
 
+/* Kanvas tetap (fixed) tempat foto patokan mengambang, menumpuk DI ATAS
+   foto current di belakangnya. */
+/* Kartu menyusut mengikuti DIMENSI ASLI foto (fit-content), bukan lebar
+   tetap — sama seperti .preview-photo-inner pada current photo. Tinggi
+   total (56vh) jadi batas vertikal; .compare-reference-box mengambil
+   sisa ruang itu lalu lebarnya otomatis mengikuti aspect-ratio foto
+   (align-items:center, BUKAN stretch, supaya lebar tidak dipaksa penuh
+   container). max-width sebagai pengaman untuk foto sangat landscape. */
 .compare-reference {
-  flex: 1;
-  min-width: 0;
+  position: absolute;
+  top: 24px;
+  left: 24px;
+  z-index: 30;
+  height: 56vh;
+  min-height: 360px;
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
+  background: transparent;
 }
-
-.compare-reference-label {
-  align-self: flex-start;
-  font-size: 10px;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent);
-  font-weight: 500;
-}
-
-.compare-hint-inline {
-  color: var(--muted);
-  text-transform: none;
-  letter-spacing: normal;
-}
-
+/* Bingkai "polaroid": foto + caption menyatu dalam SATU box (background,
+   radius, shadow di sini), caption hidup di area padding-bottom yang
+   lebih besar dari sisi lainnya — sama seperti kartu polaroid fisik. */
+/* Grid (bukan flex) sengaja dipakai di sini: baris foto (1fr) mendapat
+   TINGGI PASTI dari grid algorithm SEBELUM aspect-ratio dihitung, beda
+   dari flex-grow yang bisa membuat browser gagal menghitung lebar dari
+   aspect-ratio dengan benar (photo jadi melebar penuh, banyak spasi
+   putih kiri-kanan pada foto potret). Baris caption (auto) mengambil
+   tinggi secukupnya sesuai teks. */
 .compare-reference-box {
-  width: 100%;
-  height: 76vh;
-  min-height: 520px;
-  border: 2px solid var(--accent);
-  border-radius: var(--radius);
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  justify-items: center;
+  height: 100%;
+  padding: 6px 6px 8px;
   background: var(--surface);
+  border-radius: 12px;
+  box-sizing: border-box;
+  box-shadow:
+    0 8px 24px rgba(20, 20, 15, 0.18),
+    0 2px 8px rgba(20, 20, 15, 0.1);
+}
+/* Area foto: TINGGI mengisi penuh baris grid (definite), LEBAR dihitung
+   otomatis dari aspect-ratio (inline style) berdasarkan tinggi itu —
+   inilah yang membuat kartu "membungkus pas" dimensi asli foto. */
+.compare-reference-photo {
+  width: auto;
+  height: 100%;
+  max-width: min(66vw, 600px);
+  border-radius: 6px;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
+  background: var(--surface-sunken);
 }
-
 .compare-reference-box .preview-img {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
 }
-
 .compare-reference-name {
+  width: 100%;
+  flex-shrink: 0;
   font-size: 11px;
   color: var(--muted);
   text-align: center;
-  max-width: 100%;
+  padding-top: 8px; /* jarak dari foto — warnanya menyatu dengan kartu
+     (var(--surface)) via padding .compare-reference-box, bukan strip
+     terpisah */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-@media (max-width: 900px) {
-  .compare-stage.compare-mode {
-    flex-direction: column;
-  }
-  .compare-reference-box {
-    height: 36vh;
-    min-height: 260px;
-  }
+  box-sizing: border-box;
 }
 
 /* ---------- Hint dinamis: link "semua shortcut" ---------- */
